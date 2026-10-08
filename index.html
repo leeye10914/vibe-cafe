@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>바이브 카페 주문서</title>
+  <!-- 페이지의 모양을 꾸밀 CSS 파일을 연결합니다. -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Supabase JavaScript v2를 먼저 불러와서 데이터베이스 연결 준비를 합니다. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 페이지의 동작을 담당할 JavaScript 파일을 연결합니다. -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- 카페 로고와 이름, 간단한 소개를 보여줍니다. -->
+  <header>
+    <div aria-label="커피 로고">☕</div>
+    <h1>바이브 카페</h1>
+    <p>당신의 하루에 바이브를 더하다</p>
+  </header>
+
+  <main>
+    <h2>주문서</h2>
+
+    <!-- 이름 검사는 JavaScript에서 하도록 브라우저의 기본 검사를 끕니다. -->
+    <form id="order-form" novalidate>
+      <!-- 주문할 사람의 이름을 입력합니다. -->
+      <div>
+        <label for="customer-name">이름 (필수)</label>
+        <input type="text" id="customer-name" name="customerName" required>
+      </div>
+
+      <!-- 연락받을 전화번호를 입력합니다. -->
+      <div>
+        <label for="phone">전화번호</label>
+        <input type="tel" id="phone" name="phone">
+      </div>
+
+      <!-- 메뉴와 각 음료의 가격을 선택합니다. 가격은 원 단위 숫자로 적습니다. -->
+      <div>
+        <label for="drink">음료 선택</label>
+        <select id="drink" name="drink">
+          <option value="" data-price="0">-- 음료를 선택하세요 --</option>
+          <option value="아메리카노" data-price="3500">아메리카노 3,500원</option>
+          <option value="카페라떼" data-price="4000">카페라떼 4,000원</option>
+          <option value="카페모카" data-price="4500">카페모카 4,500원</option>
+          <option value="바닐라라떼" data-price="4500">바닐라라떼 4,500원</option>
+          <option value="녹차라떼" data-price="4500">녹차라떼 4,500원</option>
+        </select>
+      </div>
+
+      <!-- 음료 크기와 크기에 따른 추가 가격을 하나 선택합니다. -->
+      <fieldset>
+        <legend>사이즈</legend>
+        <div>
+          <input type="radio" id="size-s" name="size" value="S" data-price="0">
+          <label for="size-s">S +0원</label>
+        </div>
+        <div>
+          <input type="radio" id="size-m" name="size" value="M" data-price="500" checked>
+          <label for="size-m">M +500원</label>
+        </div>
+        <div>
+          <input type="radio" id="size-l" name="size" value="L" data-price="1000">
+          <label for="size-l">L +1,000원</label>
+        </div>
+      </fieldset>
+
+      <!-- 원하는 추가 옵션을 여러 개 선택할 수 있습니다. -->
+      <fieldset>
+        <legend>추가 옵션</legend>
+        <div>
+          <input type="checkbox" id="option-shot" name="options" value="샷 추가" data-price="500">
+          <label for="option-shot">샷 추가 +500원</label>
+        </div>
+        <div>
+          <input type="checkbox" id="option-cream" name="options" value="크림 추가" data-price="500">
+          <label for="option-cream">크림 추가 +500원</label>
+        </div>
+        <div>
+          <input type="checkbox" id="option-syrup" name="options" value="시럽 추가" data-price="300">
+          <label for="option-syrup">시럽 추가 +300원</label>
+        </div>
+        <div>
+          <input type="checkbox" id="option-decaf" name="options" value="디카페인" data-price="0">
+          <label for="option-decaf">디카페인 +0원</label>
+        </div>
+      </fieldset>
+
+      <!-- 주문할 음료의 개수를 1개부터 10개까지 입력합니다. -->
+      <div>
+        <label for="quantity">수량</label>
+        <input type="number" id="quantity" name="quantity" min="1" max="10" value="1">
+      </div>
+
+      <!-- 카페에 전달할 요청사항을 입력합니다. -->
+      <div>
+        <label for="request">요청사항</label>
+        <textarea id="request" name="request"></textarea>
+      </div>
+
+      <!-- JavaScript가 계산한 예상 주문 금액을 표시할 영역입니다. -->
+      <p id="estimated-price" aria-live="polite">예상 금액: 0원</p>
+
+      <!-- 주문을 제출하거나 입력 내용을 처음 상태로 되돌립니다. -->
+      <button type="submit">주문하기</button>
+      <button type="reset">다시 작성</button>
+    </form>
+
+    <!-- JavaScript가 주문 결과를 표시할 영역이며, 처음에는 숨겨 둡니다. -->
+    <div id="order-message" aria-live="polite" hidden></div>
+  </main>
+</body>
+</html>
